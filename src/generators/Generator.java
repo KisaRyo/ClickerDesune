@@ -1,30 +1,28 @@
 package generators;
 
-import core.PrestigeManager;
-
 public abstract class Generator {
     protected String name;
-    protected int level;
     protected double baseCost;
-
-    public Generator(String name, double baseCost) {
-        this.name = name;
-        this.baseCost = baseCost;
-        this.level = 1;
-    }
-    
-    public abstract double calculateBaseProduction();
-
-    public double getFinalProduction() {
-        return calculateBaseProduction() * PrestigeManager.getMultiplier();
-    }
+    protected int level;
 
     public void upgrade() {
         level++;
-        baseCost = baseCost * 1.5; 
     }
-    
-    public double getCost() { return baseCost; }
-    public String getName() { return name; }
-    public int getLevel() { return level; }
+
+    public double getCost() {
+        // Simple math: Cost increases by 15% per level
+        return baseCost * Math.pow(1.15, level - 1);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    // This calculates the raw number (e.g., 50 per sec)
+    public abstract double calculateBaseProduction();
+
+    // This adds the "Isekai" multiplier to it
+    public double getFinalProduction() {
+        return calculateBaseProduction() * core.IsekaiManager.getMultiplier();
+    }
 }
